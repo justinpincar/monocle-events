@@ -103,8 +103,9 @@ function mongoReady(client) {
 			});
 		});
 
-	    res.contentType("text/javascript");
-	    res.send(200);
+	    res.header('Content-Type', 'application/javascript');
+	    res.header('Content-Length', 0);
+	    res.end();
 	});
 
     app.listen(80);
