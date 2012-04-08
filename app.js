@@ -1,6 +1,9 @@
 var express = require('express');
+var io = require('socket.io-client');
 var mongodb = require('mongodb');
 var ObjectID = require('mongodb').ObjectID;
+
+var socket = io.connect('http://trisse.com:8000/monocle');
 
 var server = new mongodb.Server("staff.mongohq.com", 10085, {auto_reconnect: true});
 var client = new mongodb.Db('monocle-production', server, {strict: false});
@@ -45,7 +48,9 @@ function mongoReady(client) {
 		    collection.insert(analyticObject, {safe: false});
 		});
 
-	    // cometClient.send(accountId, event.toMap());
+	    analyticObject.a = accountId;
+	    analyticObject.r = req.header('Referer');
+	    socket.emit('analytic', analyticObject);
 
 	    var identifyId = req.param("identifyId", null);
 	    var identifyEmail = req.param("identifyEmail", null);
